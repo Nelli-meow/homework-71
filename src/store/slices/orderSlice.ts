@@ -11,7 +11,11 @@ const initialState: OrderState = {
 export const orderSlice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {}
+  reducers: {
+    addOneDish: (state, {}) => {
+
+    }
+  }
 });
 
 export const orderReducer = orderSlice.reducer;
