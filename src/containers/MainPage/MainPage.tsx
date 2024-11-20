@@ -1,11 +1,10 @@
 import * as React from 'react';
-import Header from '../../components/Header/Header.tsx';
-import OrdersPage from '../OrdersPage/OrdersPage.tsx';
+import DishesPage from '../DishesPage/DishesPage.tsx';
 
 const MainPage = () => {
   return (
     <div>
-      <OrdersPage/>
+      <DishesPage/>
     </div>
   );
 };
