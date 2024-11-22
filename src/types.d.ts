@@ -14,3 +14,10 @@ export interface IOrders {
 export interface IOrderAPI {
   [id: string]: IOrders;
 }
+
+export interface IDishMutation {
+  title: string;
+  price: number;
+  image: string;
+}
+

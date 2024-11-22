@@ -25,7 +25,7 @@ const DishesPage = () => {
         {dishes.length === 0 ? (
           <p>No dishes.</p>
         ) : (
-         <AddedDishesItem/>
+          <AddedDishesItem />
         )}
       </div>
     </>

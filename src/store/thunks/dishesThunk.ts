@@ -24,3 +24,36 @@ export const fetchAllDishesThunk =  createAsyncThunk<IOrder[], void>(
 
   }
 )
+
+export const fetchOneDish = createAsyncThunk<IOrderAPI | null, string>(
+  'dishes/fetchOneDish',
+  async (id) => {
+    const response = await axiosAPI.get<IOrderAPI | null>('/dishes/' + id + '.json');
+    const dish = response.data;
+
+
+    if (dish === null) {
+      throw new Error('Not found');
+    }
+
+    return dish;
+  }
+);
+
+export const deleteDish = createAsyncThunk<void, string>(
+  'dishes/deleteDish',
+  async (id: string) => {
+    await axiosAPI.delete(`dishes/${id}.json`);
+  }
+);
+
+export const editDish = createAsyncThunk<void, { id: string; dish: IOrderAPI }>(
+  'dishes/editDish',
+  async ({ id, dish }) => {
+    await axiosAPI.put(`dishes/${id}.json`, dish);
+  }
+);
+
+
+
+

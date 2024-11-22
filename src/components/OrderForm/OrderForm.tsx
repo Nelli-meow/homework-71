@@ -1,21 +1,27 @@
-import { useCallback, useState } from 'react';
-import { IOrder } from '../../types';
+import { useState, useCallback, useEffect } from 'react';
+import { IDishMutation } from '../../types';
+import axiosAPI from '../../axiosAPI';
 import * as React from 'react';
-import axiosAPI from '../../axiosAPI.ts';
 
 const initialState = {
   title: '',
   price: 1,
   image: '',
+};
+
+interface OrderFormProps {
+  addNewDish: (dish: IDishMutation) => void;
+  isEdit?: boolean;
 }
 
-const OrderForm = () => {
-  const [orders, setOrders] = useState<IOrder>({...initialState});
+const OrderForm: React.FC<OrderFormProps> = ({ addNewDish, isEdit }) => {
+  const [newDish, setNewDish] = useState(initialState);
+
 
   const onChangeField = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setOrders((prevState) => ({
+    setNewDish((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -24,55 +30,57 @@ const OrderForm = () => {
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (orders.title.length === 0 || orders.price === 0 || orders.image.length === 0) {
-      alert('Dont leave fields empty');
+    if (!newDish.title || !newDish.price || !newDish.image) {
+      alert('Don\'t leave fields empty');
     } else {
       try {
-        const res = await axiosAPI.post('dishes.json', {...orders});
+        addNewDish({ ...newDish });
 
-        setOrders({...res.data});
-        setOrders({...initialState});
+        if (!isEdit) {
+          setNewDish({ ...initialState });
+        }
       } catch (error) {
-        console.error( error);
+        console.error(error);
       }
     }
   };
 
   return (
-    <>
-      <div className="container mt-5">
-        <h3 className="my-5">Add new dish</h3>
-        <form onSubmit={onSubmitForm}>
-          <div className="mb-3">
-            <label className="form-label">Title</label>
-            <input
-              value={orders.title}
-              name="title"
-              onChange={onChangeField}
-              className="form-control"/>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Price</label>
-            <input
-              value={orders.price}
-              name="price"
-              type="number"
-              onChange={onChangeField}
-              className="form-control" min={1}/>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Dish image</label>
-            <input
-              value={orders.image}
-              name="image"
-              onChange={onChangeField}
-              className="form-control"/>
-            {orders.image && <img src={orders.image} alt="Dish image" className="mt-3 " width="200"/>}
-          </div>
-          <button type="submit" className="btn btn-outline-warning">Add</button>
-        </form>
-      </div>
-    </>
+    <div className="container mt-5">
+      <h3>{isEdit ? 'Edit' : 'Add new'} dish</h3>
+      <form onSubmit={onSubmitForm}>
+        <div className="mb-3">
+          <label className="form-label">Title</label>
+          <input
+            value={newDish.title}
+            name="title"
+            onChange={onChangeField}
+            className="form-control"
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Price</label>
+          <input
+            value={newDish.price}
+            name="price"
+            type="number"
+            onChange={onChangeField}
+            className="form-control"
+            min={1}
+          />
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Dish image</label>
+          <input
+            value={newDish.image}
+            name="image"
+            onChange={onChangeField}
+            className="form-control"
+          />
+        </div>
+        <button className="btn btn-primary">{isEdit ? 'Save' : 'Add dish'}</button>
+      </form>
+    </div>
   );
 };
 

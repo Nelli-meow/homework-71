@@ -1,15 +1,26 @@
-import {createSlice} from '@reduxjs/toolkit';
-import { fetchAllDishesThunk } from '../thunks/dishesThunk.ts';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { deleteDish, fetchAllDishesThunk, fetchOneDish } from '../thunks/dishesThunk.ts';
+import { IOrderAPI } from '../../types';
+import { RootState } from '../../app/store.ts';
 
 interface OrderState {
   orders: [];
-  isAdded: boolean;
+  isFetchLoading: boolean;
+  isDeletedLoading: boolean;
+  updateLoading: boolean,
+  oneDish: null | IOrderAPI;
 }
 
 const initialState: OrderState = {
   orders: [],
-  isAdded: false,
+  isFetchLoading: false,
+  isDeletedLoading: false,
+  updateLoading: false,
+  oneDish: null,
 }
+
+export const selectOneDish = (state: RootState) => state.orders.oneDish;
+export const selectFetchingDishes = (state: RootState) => state.orders.isFetchLoading;
 
 export const orderSlice = createSlice({
   name: 'orders',
@@ -22,14 +33,34 @@ export const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllDishesThunk.pending, (state) => {
-        state.isAdded = true;
+        state.isFetchLoading = true;
       })
       .addCase(fetchAllDishesThunk.fulfilled, (state, action ) => {
         state.orders = action.payload || [];
-        state.isAdded = false;
+        state.isFetchLoading = false;
       })
       .addCase(fetchAllDishesThunk.rejected, (state) => {
-        state.isAdded = false;
+        state.isFetchLoading = false;
+      })
+      .addCase(deleteDish.pending, (state) => {
+        state.isDeletedLoading = true;
+      })
+      .addCase(deleteDish.fulfilled, (state ) => {
+        state.isDeletedLoading = false;
+      })
+      .addCase(deleteDish.rejected, (state) => {
+        state.isDeletedLoading = false;
+      })
+      .addCase(fetchOneDish.pending, (state) => {
+        state.isFetchLoading = true;
+        state.oneDish = null;
+      })
+      .addCase(fetchOneDish.fulfilled, (state, action: PayloadAction<IOrderAPI | null> ) => {
+        state.isFetchLoading = false;
+        state.oneDish = action.payload;
+      })
+      .addCase(fetchOneDish.rejected, (state) => {
+        state.isFetchLoading = false;
       })
   }
 });
