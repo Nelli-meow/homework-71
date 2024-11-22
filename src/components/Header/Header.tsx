@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-warning">
       <div className="container d-flex  justify-content-between">
-        <NavLink to="/" className="navbar-brand" >Turtle Pizza Admin</NavLink>
+        <NavLink to="/admin" className="navbar-brand" >Turtle Pizza Admin</NavLink>
         <div id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">

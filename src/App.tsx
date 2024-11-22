@@ -12,7 +12,7 @@ const App = () => {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<MainPage/>} />
+        <Route path="/admin" element={<MainPage/>}/>
         <Route path="/admin/dishes" element={<DishesPage/>} />
         <Route path="/admin/dishes/add-new-dish" element={<OrderForm/>} />
         <Route path="*" element={<p className="text-center mt-5">Page is not found :(</p>} />
